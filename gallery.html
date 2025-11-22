@@ -22,18 +22,29 @@
 
     <main class="content">
         <h2>Guest Photo Gallery</h2>
+        <p class="intro" style="text-align:center;">
+            Memories from real stays at California Dream 🌴✨  
+            Click any photo to enlarge.
+        </p>
 
-        <section class="gallery-section">
-            <p>
-                We love seeing memories from your stay!  
-                Soon this section will feature guest photos and highlights.
-            </p>
+        <!-- Masonry Grid -->
+        <div id="gallery" class="masonry"></div>
 
-            <!-- Placeholder until images are added -->
-            <div style="text-align:center; padding: 30px; opacity: 0.6;">
-                <em>Photo gallery coming soon...</em>
-            </div>
-        </section>
+        <!-- Infinite scroll sentinel -->
+        <div id="sentinel" class="sentinel">Loading more photos…</div>
     </main>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox hidden">
+        <span id="lightboxClose" class="lightbox-close">&times;</span>
+        <img id="lightboxImg" class="lightbox-img" src="" alt="Expanded photo">
+        <div id="lightboxCaption" class="lightbox-caption"></div>
+
+        <button id="prevBtn" class="lightbox-nav prev">&#10094;</button>
+        <button id="nextBtn" class="lightbox-nav next">&#10095;</button>
+    </div>
+
+    <script src="gallery.js"></script>
 </body>
 </html>
+
