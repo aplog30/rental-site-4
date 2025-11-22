@@ -123,3 +123,128 @@ img {
 .contact p {
     font-size: 17px;
 }
+
+
+/* =========================
+   Masonry Photo Gallery
+========================= */
+
+.masonry {
+    column-count: 3;
+    column-gap: 18px;
+}
+
+@media (max-width: 900px) {
+    .masonry { column-count: 2; }
+}
+
+@media (max-width: 600px) {
+    .masonry { column-count: 1; }
+}
+
+.gallery-item {
+    break-inside: avoid;
+    margin-bottom: 18px;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    background: white;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-4px);
+}
+
+.gallery-item img {
+    width: 100%;
+    display: block;
+}
+
+/* Optional cute tag overlay */
+.gallery-tag {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 999px;
+}
+
+/* Sentinel (infinite scroll loader) */
+.sentinel {
+    text-align: center;
+    font-size: 15px;
+    opacity: 0.7;
+    padding: 20px;
+}
+
+/* =========================
+   Lightbox
+========================= */
+
+.lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.lightbox.hidden {
+    display: none;
+}
+
+.lightbox-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    border-radius: 12px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+}
+
+.lightbox-caption {
+    color: #fff;
+    text-align: center;
+    margin-top: 12px;
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 18px;
+    right: 25px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    font-size: 30px;
+    padding: 12px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.lightbox-nav:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.lightbox-nav.prev { left: 18px; }
+.lightbox-nav.next { right: 18px; }
+
