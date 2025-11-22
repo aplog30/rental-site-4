@@ -1,0 +1,15 @@
+body {
+    font-family: Arial;
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+img {
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
