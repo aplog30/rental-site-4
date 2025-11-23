@@ -434,3 +434,21 @@ section {
 .hero-image-small {
     max-width: 100%;
 }
+
+
+/* Adjust homeMain hero image placement & size */
+.hero-small {
+    width: 100%;
+    margin-top: 5px;            /* move image up */
+    display: flex;
+    justify-content: center;
+}
+
+.hero-image-small {
+    width: 75%;                 /* scale down ~25% */
+    max-height: 500px;          /* keep height reasonable */
+    object-fit: contain;        /* show full image */
+    margin-top: -20px;          /* lift upward slightly */
+    border-radius: 18px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
