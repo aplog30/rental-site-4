@@ -23,16 +23,14 @@
         </nav>
     </header>
 
-
-    <!-- Hero Section (Full Screen Image) -->
-    <section class="hero">
-        <img src="images/HomePage/homeMain.jpg" class="hero-full" alt="California Dream Main Image">
+    <!-- Smaller hero image -->
+    <section class="hero-small">
+        <img src="images/HomePage/homeMain.jpg" class="hero-image-small" alt="California Dream Main Image">
     </section>
 
-
-    <!-- Quick Info Section -->
     <main class="content">
 
+        <!-- Quick Info Section -->
         <section class="quick-info">
             <h2>About the House</h2>
             <ul>
@@ -45,80 +43,105 @@
             </ul>
         </section>
 
-
-        <!-- Picture Sections -->
+        <!-- LAYOUT for each section:
+            Big image on top, two smaller below it
+        -->
 
         <!-- Living Room -->
         <section class="photo-section">
             <h2>Living Room</h2>
-            <div class="photo-grid">
-                <img src="images/HomePage/livingRoom1.jpg">
-                <img src="images/HomePage/livingRoom2.jpg">
-                <img src="images/HomePage/livingRoom3.jpg">
+            <div class="photo-large">
+                <img src="images/HomePage/livingRoom1.jpg" class="expandable">
+            </div>
+            <div class="photo-row">
+                <img src="images/HomePage/livingRoom2.jpg" class="expandable">
+                <img src="images/HomePage/livingRoom3.jpg" class="expandable">
             </div>
         </section>
 
         <!-- Deck -->
         <section class="photo-section">
             <h2>Deck</h2>
-            <div class="photo-grid">
-                <img src="images/HomePage/deck1.jpg">
-                <img src="images/HomePage/deck2.jpg">
-                <img src="images/HomePage/deck3.jpg">
+            <div class="photo-large">
+                <img src="images/HomePage/deck1.jpg" class="expandable">
+            </div>
+            <div class="photo-row">
+                <img src="images/HomePage/deck2.jpg" class="expandable">
+                <img src="images/HomePage/deck3.jpg" class="expandable">
             </div>
         </section>
 
-        <!-- Outside House -->
+        <!-- Outside -->
         <section class="photo-section">
             <h2>Outside House</h2>
-            <div class="photo-grid">
-                <img src="images/HomePage/Outside/outside1.jpg">
-                <img src="images/HomePage/Outside/outside2.jpg">
-                <img src="images/HomePage/Outside/outside3.jpg">
+            <div class="photo-large">
+                <img src="images/HomePage/outside1.jpg" class="expandable">
+            </div>
+            <div class="photo-row">
+                <img src="images/HomePage/outside2.jpg" class="expandable">
+                <img src="images/HomePage/outside3.jpg" class="expandable">
             </div>
         </section>
 
         <!-- Kitchen -->
         <section class="photo-section">
             <h2>Kitchen</h2>
-            <div class="photo-grid">
-                <img src="images/HomePage/Kitchen/kitchen1.jpg">
-                <img src="images/HomePage/Kitchen/kitchen2.jpg">
-                <img src="images/HomePage/Kitchen/kitchen3.jpg">
+            <div class="photo-large">
+                <img src="images/HomePage/kitchen1.jpg" class="expandable">
+            </div>
+            <div class="photo-row">
+                <img src="images/HomePage/kitchen2.jpg" class="expandable">
+                <img src="images/HomePage/kitchen3.jpg" class="expandable">
             </div>
         </section>
 
         <!-- Bedrooms -->
         <section class="photo-section">
             <h2>Bedrooms</h2>
-            <div class="photo-grid">
-                <img src="images/HomePage/Bedrooms/bedroom1.jpg">
-                <img src="images/HomePage/Bedrooms/bedroom2.jpg">
-                <img src="images/HomePage/Bedrooms/bedroom3.jpg">
+            <div class="photo-large">
+                <img src="images/HomePage/bedroom1.jpg" class="expandable">
+            </div>
+            <div class="photo-row">
+                <img src="images/HomePage/bedroom2.jpg" class="expandable">
+                <img src="images/HomePage/bedroom3.jpg" class="expandable">
             </div>
         </section>
 
         <!-- Backyard -->
         <section class="photo-section">
             <h2>Backyard</h2>
-            <div class="photo-grid">
-                <img src="images/HomePage/Backyard/backyard1.jpg">
-                <img src="images/HomePage/Backyard/backyard2.jpg">
-                <img src="images/HomePage/Backyard/backyard3.jpg">
+            <div class="photo-large">
+                <img src="images/HomePage/backyard1.jpg" class="expandable">
+            </div>
+            <div class="photo-row">
+                <img src="images/HomePage/backyard2.jpg" class="expandable">
+                <img src="images/HomePage/backyard3.jpg" class="expandable">
             </div>
         </section>
 
         <!-- River -->
         <section class="photo-section">
             <h2>River</h2>
-            <div class="photo-grid">
-                <img src="images/HomePage/River/river1.jpg">
-                <img src="images/HomePage/River/river2.jpg">
-                <img src="images/HomePage/River/river3.jpg">
+            <div class="photo-large">
+                <img src="images/HomePage/river1.jpg" class="expandable">
+            </div>
+            <div class="photo-row">
+                <img src="images/HomePage/river2.jpg" class="expandable">
+                <img src="images/HomePage/river3.jpg" class="expandable">
             </div>
         </section>
 
     </main>
+
+    <!-- Lightbox (reuse gallery system) -->
+    <div id="lightbox" class="lightbox hidden">
+        <span id="lightboxClose" class="lightbox-close">&times;</span>
+        <img id="lightboxImg" class="lightbox-img" src="">
+    </div>
+
+    <script src="homepage.js"></script>
+
 </body>
 </html>
+
 
