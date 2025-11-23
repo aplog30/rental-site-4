@@ -293,10 +293,17 @@ img {
     text-align: center;
 }
 
+.hero-small {
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+}
+
 .hero-image-small {
     width: 90%;
-    max-height: 350px;
-    object-fit: cover;
+    height: auto;          /* show full image */
+    max-height: 650px;     /* bigger but not overwhelming */
+    object-fit: contain;   /* show full image */
     border-radius: 20px;
     box-shadow: 0 4px 14px rgba(0,0,0,0.15);
 }
