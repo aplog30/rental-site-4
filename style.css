@@ -293,10 +293,17 @@ img {
     text-align: center;
 }
 
+.hero-small {
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+}
+
 .hero-image-small {
     width: 90%;
-    max-height: 350px;
-    object-fit: cover;
+    height: auto;          /* show full image */
+    max-height: 650px;     /* bigger but not overwhelming */
+    object-fit: contain;   /* show full image */
     border-radius: 20px;
     box-shadow: 0 4px 14px rgba(0,0,0,0.15);
 }
@@ -359,3 +366,71 @@ img {
     cursor: pointer;
 }
 
+
+.expandable {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.expandable:active {
+    transform: scale(1.03) translateY(-6px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+
+/* New info section */
+.info-top {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin: 40px 0;
+}
+
+.info-box {
+    background: #f8f8f8;
+    padding: 20px;
+    text-align: center;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.info-box h3 {
+    margin: 0;
+    color: #355C7D;
+}
+
+.info-box p {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.info-description {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    line-height: 1.65;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.1);
+}
+
+
+
+/* --- FIX HORIZONTAL SCROLL PROBLEM --- */
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Ensure sections don't exceed screen width */
+section {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Ensure image containers don't push layout wider */
+.photo-section,
+.photo-large img,
+.photo-row img,
+.hero-image-small {
+    max-width: 100%;
+}
