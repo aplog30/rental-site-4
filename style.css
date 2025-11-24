@@ -1,4 +1,4 @@
-/* Global Styles */
+r/* Global Styles */
 body {
     font-family: "Trebuchet MS", Arial, sans-serif;
     margin: 0;
@@ -554,5 +554,18 @@ section {
 
 .selected-range {
     background: #9edba3;
+}
+
+
+.booked {
+    background: #d6d6d6 !important;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.past-day {
+    background: #ececec;
+    color: #999;
+    cursor: not-allowed;
 }
 
