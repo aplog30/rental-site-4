@@ -502,3 +502,58 @@ section {
     font-weight: bold;
 }
 
+#calendar {
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.calendar-header button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.calendar-weekdays, .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+.calendar-weekdays div {
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+.calendar-days .day {
+    padding: 10px;
+    margin: 3px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.calendar-days .day:hover {
+    background: #e3f3ff;
+}
+
+.booked {
+    background: #ffb3b3;
+    color: #600;
+    cursor: not-allowed;
+}
+
+.selected-start, .selected-end {
+    background: #4CAF50;
+    color: white;
+}
+
+.selected-range {
+    background: #9edba3;
+}
+
+
