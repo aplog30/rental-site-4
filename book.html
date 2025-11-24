@@ -1,25 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Your Stay</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <h1 class="site-title">California Dream</h1>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="book.html" class="active">Book</a></li>
+            <li><a href="amenities.html">Amenities</a></li>
+            <li><a href="guide.html">User Guide</a></li>
+            <li><a href="gallery.html">Photo Gallery</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- MAIN CONTENT -->
 <div class="booking-container">
 
-  <h2>Select Dates</h2>
-  <div id="calendar"></div>
+    <h2>Availability Calendar</h2>
 
-  <div class="price-box">
-    <p><strong>Selected Range:</strong> <span id="rangeDisplay">None</span></p>
-    <p><strong>Total Price:</strong> $<span id="priceDisplay">0</span></p>
-  </div>
+    <!-- Loading spinner -->
+    <div id="calendar-loading" class="loading-spinner">
+        Loading calendar...
+    </div>
 
-  <div class="booking-form">
-    <h3>Request to Book</h3>
+    <!-- Calendar -->
+    <div id="calendar"></div>
 
-    <label>Email:</label>
-    <input type="email" id="emailInput" placeholder="your@email.com">
+    <!-- Price Box -->
+    <div class="price-box">
+        <p><strong>Selected Range:</strong> 
+            <span id="rangeDisplay">None</span>
+        </p>
+        <p><strong>Total Price:</strong> 
+            $<span id="priceDisplay">0</span>
+        </p>
+    </div>
 
-    <label>Start Date:</label>
-    <input type="text" id="startInput" readonly>
+    <!-- Booking Form -->
+    <div class="booking-form">
+        <h3>Request to Book</h3>
 
-    <label>End Date:</label>
-    <input type="text" id="endInput" readonly>
+        <label>Email:</label>
+        <input type="email" id="emailInput" placeholder="your@email.com">
 
-    <button id="submitRequest">Send Booking Request</button>
-  </div>
-</div>
+        <label>Start Date:</label>
+        <input type="text" id="startInput" readonly>
+
+        <label>End Date:</label>
+        <input type="text" id="endInput" readonly>
+
+        <button id="submitRequest">Send Booking Request</button>
+    </div>
+
+</div><!-- end booking-container -->
+
+<!-- JS FILE -->
+<script src="calendar.js"></script>
+
+</body>
+</html>
