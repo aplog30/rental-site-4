@@ -2,7 +2,7 @@
 /************************************************************
  * CONFIGURATION
  ************************************************************/
-const GOOGLE_SHEET_API_URL = ""https://script.google.com/macros/s/AKfycby4FMMdrwqh8NbYxgAMxM-09qUTLfB04oT8SLyu9ffcNaHdQihlPNk8vzsI0dhRcJy5Kg/exec"; // paste your Apps Script URL
+const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycby4FMMdrwqh8NbYxgAMxM-09qUTLfB04oT8SLyu9ffcNaHdQihlPNk8vzsI0dhRcJy5Kg/exec"; // paste your Apps Script URL
 
 // Today and 1-year max limit
 const TODAY = new Date();
