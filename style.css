@@ -644,3 +644,10 @@ section {
   border-radius: 6px;
 }
 
+
+.unavailable {
+  background-color: #d1d1d1;
+  color: #888;
+  pointer-events: none;
+}
+
