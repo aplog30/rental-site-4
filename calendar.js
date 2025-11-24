@@ -1,74 +1,135 @@
-// Placeholder booked dates (YYYY-MM-DD)
-// These will be replaced by backend data later
-const dummyBookedDates = [
-    "2025-03-10",
-    "2025-03-11",
-    "2025-03-15",
-    "2025-04-02",
-    "2025-04-03"
-];
+// ---- CONFIG ----
+const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycby4FMMdrwqh8NbYxgAMxM-09qUTLfB04oT8SLyu9ffcNaHdQihlPNk8vzsI0dhRcJy5Kg/exec"; // paste your Apps Script URL
 
-let bookedDates = dummyBookedDates;
+let bookedRanges = [];
+let selectedStart = null;
+let selectedEnd = null;
 
+// Fetch booked dates from Google Sheets
+async function loadBookedDates() {
+    try {
+        const response = await fetch(GOOGLE_SHEET_API_URL);
+        const data = await response.json();
+        bookedRanges = data.map(range => ({
+            start: new Date(range.start),
+            end: new Date(range.end)
+        }));
+
+        renderCalendar(currentMonth, currentYear);
+    } catch (err) {
+        console.error("Error loading booked dates:", err);
+    }
+}
+
+// ---- Calendar Rendering ----
 const calendarEl = document.getElementById("calendar");
-
-let currentMonth = new Date().getMonth();
-let currentYear = new Date().getFullYear();
+let currentDate = new Date();
+let currentMonth = currentDate.getMonth();
+let currentYear = currentDate.getFullYear();
 
 function renderCalendar(month, year) {
-    const monthNames = [
-        "January","February","March","April","May","June",
-        "July","August","September","October","November","December"
-    ];
+    calendarEl.innerHTML = "";
 
-    const firstDay = (new Date(year, month)).getDay();
-    const daysInMonth = 32 - new Date(year, month, 32).getDate();
+    const firstDay = new Date(year, month).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    let html = `
-        <div class="cal-header">
-            <button onclick="prevMonth()">&lt;</button>
-            <h3>${monthNames[month]} ${year}</h3>
-            <button onclick="nextMonth()">&gt;</button>
-        </div>
-        <div class="cal-grid">
-            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div>
-            <div>Thu</div><div>Fri</div><div>Sat</div>
+    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+    // Header
+    const header = document.createElement("div");
+    header.classList.add("calendar-header");
+    header.innerHTML = `
+        <button id="prevMonth">&#9664;</button>
+        <h3>${monthNames[month]} ${year}</h3>
+        <button id="nextMonth">&#9654;</button>
     `;
+    calendarEl.appendChild(header);
 
-    // Blank cells before first day
+    document.getElementById("prevMonth").onclick = () => changeMonth(-1);
+    document.getElementById("nextMonth").onclick = () => changeMonth(1);
+
+    // Weekdays
+    const weekdays = document.createElement("div");
+    weekdays.classList.add("calendar-weekdays");
+    weekdays.innerHTML = `
+        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div>
+        <div>Thu</div><div>Fri</div><div>Sat</div>
+    `;
+    calendarEl.appendChild(weekdays);
+
+    // Days grid
+    const daysGrid = document.createElement("div");
+    daysGrid.classList.add("calendar-days");
+
+    // empty cells
     for (let i = 0; i < firstDay; i++) {
-        html += `<div></div>`;
+        const empty = document.createElement("div");
+        empty.classList.add("empty");
+        daysGrid.appendChild(empty);
     }
 
-    // Fill dates
-    for (let day = 1; day <= daysInMonth; day++) {
-        const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-        const isBooked = bookedDates.includes(dateStr);
+    // fill days
+    for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(year, month, d);
+        const dayEl = document.createElement("div");
+        dayEl.classList.add("day");
+        dayEl.textContent = d;
 
-        html += `<div class="cal-day ${isBooked ? "booked" : ""}">${day}</div>`;
+        if (isDateBooked(date)) {
+            dayEl.classList.add("booked");
+        } else {
+            dayEl.onclick = () => handleDateClick(date);
+        }
+
+        if (selectedStart && sameDay(date, selectedStart)) {
+            dayEl.classList.add("selected-start");
+        }
+        if (selectedEnd && sameDay(date, selectedEnd)) {
+            dayEl.classList.add("selected-end");
+        }
+        if (selectedStart && selectedEnd && date >= selectedStart && date <= selectedEnd) {
+            dayEl.classList.add("selected-range");
+        }
+
+        daysGrid.appendChild(dayEl);
     }
 
-    html += "</div>";
-    calendarEl.innerHTML = html;
+    calendarEl.appendChild(daysGrid);
 }
 
-function nextMonth() {
-    currentMonth++;
-    if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
-    }
+function changeMonth(direction) {
+    currentMonth += direction;
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    if (currentMonth > 11) { currentMonth = 0;  currentYear++; }
     renderCalendar(currentMonth, currentYear);
 }
 
-function prevMonth() {
-    currentMonth--;
-    if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
+// ---- Booking Logic ----
+
+function sameDay(a, b) {
+    return a.getFullYear() === b.getFullYear() &&
+           a.getMonth() === b.getMonth() &&
+           a.getDate() === b.getDate();
+}
+
+function isDateBooked(date) {
+    return bookedRanges.some(range => date >= range.start && date <= range.end);
+}
+
+function handleDateClick(date) {
+    if (!selectedStart) {
+        selectedStart = date;
+        selectedEnd = null;
+    } else if (!selectedEnd) {
+        if (date <= selectedStart) return; 
+        selectedEnd = date;
+    } else {
+        selectedStart = date;
+        selectedEnd = null;
     }
+
     renderCalendar(currentMonth, currentYear);
 }
 
-// Initial render
-renderCalendar(currentMonth, currentYear);
+// Load booked dates on startup
+loadBookedDates();
