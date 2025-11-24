@@ -1,12 +1,16 @@
-
 /************************************************************
  * CONFIGURATION
  ************************************************************/
-const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycby4FMMdrwqh8NbYxgAMxM-09qUTLfB04oT8SLyu9ffcNaHdQihlPNk8vzsI0dhRcJy5Kg/exec"; // paste your Apps Script URL
+const GOOGLE_SHEET_API_URL =
+    "https://script.google.com/macros/s/AKfycby4FMMdrwqh8NbYxgAMxM-09qUTLfB04oT8SLyu9ffcNaHdQihlPNk8vzsI0dhRcJy5Kg/exec"; // <-- paste your Apps Script URL here
 
-// Today and 1-year max limit
+// Get elements
+const calendarEl = document.getElementById("calendar");
+const loadingEl = document.getElementById("calendar-loading");
+
+// Today and +1 year limit
 const TODAY = new Date();
-TODAY.setHours(0,0,0,0); // normalize
+TODAY.setHours(0, 0, 0, 0);
 
 const MAX_DATE = new Date(
     TODAY.getFullYear(),
@@ -15,13 +19,12 @@ const MAX_DATE = new Date(
 );
 
 /************************************************************
- * GLOBALS
+ * GLOBAL STATE
  ************************************************************/
 let bookedRanges = [];
 let selectedStart = null;
 let selectedEnd = null;
 
-const calendarEl = document.getElementById("calendar");
 let currentDate = new Date();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
@@ -31,18 +34,29 @@ let currentYear = currentDate.getFullYear();
  ************************************************************/
 async function loadBookedDates() {
     try {
+        // Show loader, hide calendar
+        loadingEl.style.display = "block";
+        calendarEl.style.display = "none";
+
         const response = await fetch(GOOGLE_SHEET_API_URL);
         const data = await response.json();
 
-        // Convert to Date objects
+        // Convert "start" and "end" into JS Date objects
         bookedRanges = data.map(range => ({
             start: new Date(range.start),
             end: new Date(range.end)
         }));
 
+        // Render calendar NOW that data is available
         renderCalendar(currentMonth, currentYear);
+
+        // Hide loader, show calendar
+        loadingEl.style.display = "none";
+        calendarEl.style.display = "block";
+
     } catch (error) {
         console.error("Error loading booked dates:", error);
+        loadingEl.innerText = "Failed to load calendar.";
     }
 }
 
@@ -60,7 +74,7 @@ function renderCalendar(month, year) {
         "July","August","September","October","November","December"
     ];
 
-    // Header
+    /************** HEADER **************/
     const header = document.createElement("div");
     header.classList.add("calendar-header");
     header.innerHTML = `
@@ -70,12 +84,13 @@ function renderCalendar(month, year) {
     `;
     calendarEl.appendChild(header);
 
-    // Prev month button logic
+    /************** BUTTONS **************/
     document.getElementById("prevMonth").onclick = () => {
-        const newMonth = month - 1;
-        const newYear = newMonth < 0 ? year - 1 : year;
-        const targetMonth = (newMonth + 12) % 12;
+        let newMonth = month - 1;
+        let newYear = newMonth < 0 ? year - 1 : year;
+        let targetMonth = (newMonth + 12) % 12;
 
+        // block going into the past
         const blockPast =
             newYear < TODAY.getFullYear() ||
             (newYear === TODAY.getFullYear() && targetMonth < TODAY.getMonth());
@@ -87,13 +102,13 @@ function renderCalendar(month, year) {
         }
     };
 
-    // Next month button logic
     document.getElementById("nextMonth").onclick = () => {
-        const newMonth = month + 1;
-        const newYear = newMonth > 11 ? year + 1 : year;
-        const targetMonth = newMonth % 12;
+        let newMonth = month + 1;
+        let newYear = newMonth > 11 ? year + 1 : year;
+        let targetMonth = newMonth % 12;
 
         const nextMonthStart = new Date(newYear, targetMonth, 1);
+
         if (nextMonthStart <= MAX_DATE) {
             currentMonth = targetMonth;
             currentYear = newYear;
@@ -101,7 +116,7 @@ function renderCalendar(month, year) {
         }
     };
 
-    // Weekdays header
+    /************** WEEKDAYS **************/
     const weekdays = document.createElement("div");
     weekdays.classList.add("calendar-weekdays");
     weekdays.innerHTML = `
@@ -110,11 +125,11 @@ function renderCalendar(month, year) {
     `;
     calendarEl.appendChild(weekdays);
 
-    // Days grid
+    /************** DAYS GRID **************/
     const daysGrid = document.createElement("div");
     daysGrid.classList.add("calendar-days");
 
-    // Empty cells before first day
+    // Empty cells until first day
     for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement("div");
         empty.classList.add("empty");
@@ -131,14 +146,14 @@ function renderCalendar(month, year) {
         const isPast = date < TODAY && !sameDay(date, TODAY);
 
         if (isDateBooked(date)) {
-            dayEl.classList.add("booked"); // light grey
+            dayEl.classList.add("booked"); // booked = light grey
         } else if (isPast) {
-            dayEl.classList.add("past-day"); // light grey
+            dayEl.classList.add("past-day"); // past = lighter grey
         } else {
             dayEl.onclick = () => handleDateClick(date);
         }
 
-        // Selected start/end
+        // Selected markers
         if (selectedStart && sameDay(date, selectedStart)) {
             dayEl.classList.add("selected-start");
         }
@@ -174,7 +189,7 @@ function isDateBooked(date) {
 }
 
 /************************************************************
- * DATE SELECTION LOGIC
+ * DATE SELECTION
  ************************************************************/
 function handleDateClick(date) {
     if (!selectedStart) {
@@ -194,4 +209,3 @@ function handleDateClick(date) {
  * INIT
  ************************************************************/
 loadBookedDates();
-
