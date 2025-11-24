@@ -2,13 +2,20 @@
  * CONFIGURATION
  ************************************************************/
 const GOOGLE_SHEET_API_URL =
-    "https://script.google.com/macros/s/AKfycby4FMMdrwqh8NbYxgAMxM-09qUTLfB04oT8SLyu9ffcNaHdQihlPNk8vzsI0dhRcJy5Kg/exec"; // <-- paste your Apps Script URL here
+    "https://script.google.com/macros/s/AKfycby4FMMdrwqh8NbYxgAMxM-09qUTLfB04oT8SLyu9ffcNaHdQihlPNk8vzsI0dhRcJy5Kg/exec";
 
-// Get elements
 const calendarEl = document.getElementById("calendar");
 const loadingEl = document.getElementById("calendar-loading");
 
-// Today and +1 year limit
+/* NEW: Price + form elements */
+const priceDisplay = document.getElementById("priceDisplay");
+const rangeDisplay = document.getElementById("rangeDisplay");
+const emailInput = document.getElementById("emailInput");
+const startInput = document.getElementById("startInput");
+const endInput = document.getElementById("endInput");
+const submitBtn = document.getElementById("submitRequest");
+
+/* Today and upper limit */
 const TODAY = new Date();
 TODAY.setHours(0, 0, 0, 0);
 
@@ -34,26 +41,21 @@ let currentYear = currentDate.getFullYear();
  ************************************************************/
 async function loadBookedDates() {
     try {
-        // Show loader, hide calendar
         loadingEl.style.display = "block";
         calendarEl.style.display = "none";
 
         const response = await fetch(GOOGLE_SHEET_API_URL);
         const data = await response.json();
 
-        // Convert "start" and "end" into JS Date objects
-        bookedRanges = data.map(range => ({
-            start: new Date(range.start),
-            end: new Date(range.end)
+        bookedRanges = data.map(r => ({
+            start: new Date(r.start),
+            end: new Date(r.end)
         }));
 
-        // Render calendar NOW that data is available
         renderCalendar(currentMonth, currentYear);
 
-        // Hide loader, show calendar
         loadingEl.style.display = "none";
         calendarEl.style.display = "block";
-
     } catch (error) {
         console.error("Error loading booked dates:", error);
         loadingEl.innerText = "Failed to load calendar.";
@@ -74,7 +76,7 @@ function renderCalendar(month, year) {
         "July","August","September","October","November","December"
     ];
 
-    /************** HEADER **************/
+    /**************** HEADER ****************/
     const header = document.createElement("div");
     header.classList.add("calendar-header");
     header.innerHTML = `
@@ -84,13 +86,14 @@ function renderCalendar(month, year) {
     `;
     calendarEl.appendChild(header);
 
-    /************** BUTTONS **************/
+    /****************************************
+     * MONTH NAVIGATION BUTTONS
+     ****************************************/
     document.getElementById("prevMonth").onclick = () => {
         let newMonth = month - 1;
         let newYear = newMonth < 0 ? year - 1 : year;
         let targetMonth = (newMonth + 12) % 12;
 
-        // block going into the past
         const blockPast =
             newYear < TODAY.getFullYear() ||
             (newYear === TODAY.getFullYear() && targetMonth < TODAY.getMonth());
@@ -107,16 +110,14 @@ function renderCalendar(month, year) {
         let newYear = newMonth > 11 ? year + 1 : year;
         let targetMonth = newMonth % 12;
 
-        const nextMonthStart = new Date(newYear, targetMonth, 1);
-
-        if (nextMonthStart <= MAX_DATE) {
+        if (new Date(newYear, targetMonth, 1) <= MAX_DATE) {
             currentMonth = targetMonth;
             currentYear = newYear;
             renderCalendar(currentMonth, currentYear);
         }
     };
 
-    /************** WEEKDAYS **************/
+    /**************** WEEKDAY HEADER ****************/
     const weekdays = document.createElement("div");
     weekdays.classList.add("calendar-weekdays");
     weekdays.innerHTML = `
@@ -125,18 +126,18 @@ function renderCalendar(month, year) {
     `;
     calendarEl.appendChild(weekdays);
 
-    /************** DAYS GRID **************/
+    /**************** DAYS GRID ****************/
     const daysGrid = document.createElement("div");
     daysGrid.classList.add("calendar-days");
 
-    // Empty cells until first day
+    // pad blank cells
     for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement("div");
         empty.classList.add("empty");
         daysGrid.appendChild(empty);
     }
 
-    // Day cells
+    // actual dates
     for (let d = 1; d <= daysInMonth; d++) {
         const date = new Date(year, month, d);
         const dayEl = document.createElement("div");
@@ -144,16 +145,16 @@ function renderCalendar(month, year) {
         dayEl.textContent = d;
 
         const isPast = date < TODAY && !sameDay(date, TODAY);
+        const isBooked = isDateBooked(date);
 
-        if (isDateBooked(date)) {
-            dayEl.classList.add("booked"); // booked = light grey
-        } else if (isPast) {
-            dayEl.classList.add("past-day"); // past = lighter grey
+        /** NEW: unified unavailable class */
+        if (isPast || isBooked) {
+            dayEl.classList.add("unavailable");
         } else {
             dayEl.onclick = () => handleDateClick(date);
         }
 
-        // Selected markers
+        // selections
         if (selectedStart && sameDay(date, selectedStart)) {
             dayEl.classList.add("selected-start");
         }
@@ -161,7 +162,6 @@ function renderCalendar(month, year) {
             dayEl.classList.add("selected-end");
         }
 
-        // Highlight range
         if (selectedStart && selectedEnd &&
             date >= selectedStart && date <= selectedEnd) {
             dayEl.classList.add("selected-range");
@@ -185,11 +185,11 @@ function sameDay(a, b) {
 }
 
 function isDateBooked(date) {
-    return bookedRanges.some(range => date >= range.start && date <= range.end);
+    return bookedRanges.some(r => date >= r.start && date <= r.end);
 }
 
 /************************************************************
- * DATE SELECTION
+ * DATE SELECTION + PRICE
  ************************************************************/
 function handleDateClick(date) {
     if (!selectedStart) {
@@ -202,8 +202,67 @@ function handleDateClick(date) {
         selectedStart = date;
         selectedEnd = null;
     }
+
+    updatePricingAndForm();
     renderCalendar(currentMonth, currentYear);
 }
+
+/************* NEW: seasonal multiplier *************/
+function dayMultiplier(date) {
+    const m = date.getMonth() + 1;
+
+    if (m <= 3) return 0.9;   // Jan-Mar
+    if (m <= 5) return 1.0;   // Apr-May
+    if (m <= 8) return 1.3;   // Jun-Aug
+    if (m <= 10) return 1.1;  // Sep-Oct
+    return 1.0;               // Nov-Dec
+}
+
+/************* NEW: price calculator *************/
+function calculatePrice(start, end) {
+    let price = 0;
+    const baseRate = 200;
+    let cur = new Date(start);
+
+    while (cur <= end) {
+        price += baseRate * dayMultiplier(cur);
+        cur.setDate(cur.getDate() + 1);
+    }
+
+    return Math.round(price);
+}
+
+/************* NEW: update price + form *************/
+function updatePricingAndForm() {
+    if (selectedStart && selectedEnd) {
+        rangeDisplay.textContent =
+            `${selectedStart.toDateString()} → ${selectedEnd.toDateString()}`;
+
+        const price = calculatePrice(selectedStart, selectedEnd);
+        priceDisplay.textContent = price;
+
+        startInput.value = selectedStart.toDateString();
+        endInput.value = selectedEnd.toDateString();
+    } else {
+        rangeDisplay.textContent = "None";
+        priceDisplay.textContent = "0";
+        startInput.value = "";
+        endInput.value = "";
+    }
+}
+
+/************************************************************
+ * EMAIL REQUEST BUTTON
+ ************************************************************/
+submitBtn.onclick = function () {
+    if (!emailInput.value || !selectedStart || !selectedEnd) {
+        alert("Please enter your email and choose valid dates.");
+        return;
+    }
+
+    // TODO: add EmailJS call here when you’re ready.
+    alert("Your booking request has been sent!");
+};
 
 /************************************************************
  * INIT
