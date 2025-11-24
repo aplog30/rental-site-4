@@ -1,36 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Book Your Stay</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<div class="booking-container">
 
-<body>
+  <h2>Select Dates</h2>
+  <div id="calendar"></div>
 
-<header class="header">
-    <h1 class="site-title">California Dream</h1>
-    <nav class="navbar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="book.html" class="active">Book</a></li>
-            <li><a href="amenities.html">Amenities</a></li>
-            <li><a href="guide.html">User Guide</a></li>
-            <li><a href="gallery.html">Photo Gallery</a></li>
-        </ul>
-    </nav>
-</header>
+  <div class="price-box">
+    <p><strong>Selected Range:</strong> <span id="rangeDisplay">None</span></p>
+    <p><strong>Total Price:</strong> $<span id="priceDisplay">0</span></p>
+  </div>
 
-<main class="content">
-    <section>
-        <h2>Availability Calendar</h2>
-        <div id="calendar-loading" class="loading-spinner">Loading calendar...</div>
-        <div id="calendar"></div>
-    </section>
-</main>
+  <div class="booking-form">
+    <h3>Request to Book</h3>
 
-<script src="calendar.js"></script>
-</body>
-</html>
+    <label>Email:</label>
+    <input type="email" id="emailInput" placeholder="your@email.com">
 
+    <label>Start Date:</label>
+    <input type="text" id="startInput" readonly>
 
+    <label>End Date:</label>
+    <input type="text" id="endInput" readonly>
+
+    <button id="submitRequest">Send Booking Request</button>
+  </div>
+</div>
