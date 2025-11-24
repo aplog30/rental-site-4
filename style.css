@@ -569,3 +569,26 @@ section {
     cursor: not-allowed;
 }
 
+
+.loading-spinner {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #555;
+    font-family: inherit;
+}
+
+.booked {
+    background: #d6d6d6 !important; /* booked = grey */
+    color: #666;
+    cursor: not-allowed;
+}
+
+.past-day {
+    background: #ececec; /* past = lighter grey */
+    color: #999;
+    cursor: not-allowed;
+}
+
+
+
