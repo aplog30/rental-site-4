@@ -651,3 +651,16 @@ section {
   pointer-events: none;
 }
 
+
+.hero-small {
+    margin-bottom: 0;   /* remove gap below hero */
+    padding-bottom: 0;
+}
+
+.hero-image-small {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 0;   /* make the image directly touch the bar */
+}
+
