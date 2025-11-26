@@ -664,3 +664,28 @@ section {
     margin-bottom: 0;   /* make the image directly touch the bar */
 }
 
+
+.home-info-bar {
+    background-color: #f0f7ff; /* light blue */
+    width: 100%;
+    padding: 8px 0;  /* small height */
+    margin: 0;       /* remove margin so it touches the image */
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: 14px;
+    border-bottom: 1px solid #d7e6ff;
+}
+
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.info-icon {
+    font-size: 16px;
+}
+
